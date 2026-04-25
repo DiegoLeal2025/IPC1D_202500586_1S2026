@@ -19,11 +19,11 @@ public class Busqueda {
             String codigo=Juegos[i][0].toLowerCase();
             String nombre=Juegos[i][1].toLowerCase();
             String genero=Juegos[i][2].toLowerCase();
-            String plataforma=Juegos[i][3].toLowerCase();
+            String plataforma=Juegos[i][4].toLowerCase();
             
             boolean coincideTexto = nombre.contains(Busqueda) || codigo.contains(Busqueda);
-            boolean coincideGenero = Genero.equals("Todos") || genero.equals(Genero);
-            boolean coincidePlataforma = Plataforma.equals("Todos") || plataforma.equals(Plataforma);
+            boolean coincideGenero = Genero.equals("Todos") || genero.equalsIgnoreCase(Genero);
+            boolean coincidePlataforma = Plataforma.equals("Todas") || plataforma.equalsIgnoreCase(Plataforma);
             
             if(coincideTexto && coincideGenero && coincidePlataforma)
             {
@@ -43,7 +43,7 @@ public class Busqueda {
 
             boolean coincideTexto = nombre.contains(Busqueda) || codigo.contains(Busqueda);
             boolean coincideGenero = Genero.equals("Todos") || genero.equals(Genero);
-            boolean coincidePlataforma = Plataforma.equals("Todos") || plataforma.equals(Plataforma);
+            boolean coincidePlataforma = Plataforma.equals("Todas") || plataforma.equals(Plataforma);
 
             if (coincideTexto && coincideGenero && coincidePlataforma) {
                 matrizEncuentros[buscador] = Juegos[i];
@@ -52,7 +52,5 @@ public class Busqueda {
         }
         
         return matrizEncuentros;
-    }
-
-    
+    }    
 }

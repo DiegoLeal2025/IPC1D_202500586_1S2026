@@ -127,12 +127,13 @@ public class Proyecto2 extends JFrame {
         String[][]ParametrosBuscados = Busqueda.Filtros(matrizBuscar, busqeuda, genero, plataforma);
         for(int j=0;j<ParametrosBuscados.length; j++)
         {
-            nombre = ParametrosBuscados[1][j];
-            Genero = ParametrosBuscados[2][j];
-            precio = ParametrosBuscados[3][j];
+            nombre = ParametrosBuscados[j][1];
+            Genero = ParametrosBuscados[j][2];
+            precio = ParametrosBuscados[j][3];
             
             Catalogo.add(TarjetaVisual(nombre,Genero,precio));
         }
-        Catalogo.revalidate();     
+        Catalogo.revalidate();
+        Catalogo.repaint();
     }
 }
