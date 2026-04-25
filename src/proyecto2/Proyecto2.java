@@ -5,6 +5,7 @@
 package proyecto2;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import javax.swing.*;
 /**
  *
@@ -13,8 +14,13 @@ import javax.swing.*;
 public class Proyecto2 extends JFrame {
     CardLayout Interfaz = new CardLayout();
     JPanel mainPanel = new JPanel(Interfaz);
-    JPanel pestaña1 = new JPanel();
-    JPanel pestaña2 = new JPanel();
+    JPanel pestaña1 = new JPanel(); //Menu principal
+    JPanel pestaña2 = new JPanel(new GridLayout (1,2)); //Venta de videojuegos
+    JPanel Catalogo = new JPanel(); //subdivision
+    JPanel Carrito = new JPanel(); //subdivision
+    
+    
+    JPanel pestaña3 = new JPanel();
     
     JButton btn1 = new JButton("Tienda de VideoJuegos");
     JButton btn2 = new JButton("Regresar al menu");
@@ -24,9 +30,14 @@ public class Proyecto2 extends JFrame {
     Proyecto2(){
         pestaña1.setBackground(Color.blue);
         pestaña2.setBackground(Color.CYAN);
+        Catalogo.setBackground(Color.DARK_GRAY);
+        Carrito.setBackground(Color.ORANGE);
         
         pestaña1.add(btn1);
-        pestaña2.add(btn2);
+        
+        pestaña2.add(Catalogo);
+        pestaña2.add(Carrito);  
+        Carrito.add(btn2);
 
         mainPanel.add(pestaña1,"pestaña1");
         mainPanel.add(pestaña2,"pestaña2");
