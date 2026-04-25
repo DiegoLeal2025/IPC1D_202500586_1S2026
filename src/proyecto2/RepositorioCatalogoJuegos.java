@@ -47,13 +47,13 @@ public class RepositorioCatalogoJuegos {
             while ((linea = lector.readLine()) != null) {
                 if (linea.contains(",")) {
                     String[] partes = linea.split(",");
-                    matrizUsuarios[indice][0] = partes[0];
-                    matrizUsuarios[indice][1] = partes[1];
-                    matrizUsuarios[indice][2] = partes[2];
-                    matrizUsuarios[indice][3] = partes[3];
-                    matrizUsuarios[indice][4] = partes[4];
-                    matrizUsuarios[indice][5] = partes[5];
-                    matrizUsuarios[indice][6] = partes[6];
+                    matrizUsuarios[indice][0] = partes[0]; //codigo
+                    matrizUsuarios[indice][1] = partes[1]; //nombre
+                    matrizUsuarios[indice][2] = partes[2]; //Genero
+                    matrizUsuarios[indice][3] = partes[3]; //Precio
+                    matrizUsuarios[indice][4] = partes[4]; //Plataforma
+                    matrizUsuarios[indice][5] = partes[5]; //Stock
+                    matrizUsuarios[indice][6] = partes[6]; //Descripcion
                     indice++;
                 }
             }
