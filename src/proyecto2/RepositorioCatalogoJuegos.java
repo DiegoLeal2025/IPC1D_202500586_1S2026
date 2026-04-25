@@ -16,6 +16,7 @@ import java.io.PrintWriter;
  * @author elven
  */
 public class RepositorioCatalogoJuegos {
+    
      private String nombreArchivo = "catalogo.txt";
 
     public RepositorioCatalogoJuegos() {
@@ -24,6 +25,7 @@ public class RepositorioCatalogoJuegos {
 
     public void asegurarArchivoExiste() {
         File archivo = new File(nombreArchivo);
+        System.out.println(archivo.getAbsolutePath());
         if (!archivo.exists()) {
             try {
                 archivo.createNewFile();
@@ -33,10 +35,10 @@ public class RepositorioCatalogoJuegos {
         }
     }
 
-    // Retorna una matriz [n][2] donde [i][0] es usuario y [i][1] es contraseña
-    public String[][] obtenerTodosLosUsuarios() {
+    // Retorna una matriz [n][2] donde [i][0] es usuario y [i][1] es codigo del juego
+    public String[][] obtenerTodosLosJuegos() {
         int cantidadLineas = contarLineas();
-        String[][] matrizUsuarios = new String[cantidadLineas][2];
+        String[][] matrizUsuarios = new String[cantidadLineas][7];
 
         try {
             BufferedReader lector = new BufferedReader(new FileReader(nombreArchivo));
@@ -47,6 +49,11 @@ public class RepositorioCatalogoJuegos {
                     String[] partes = linea.split(",");
                     matrizUsuarios[indice][0] = partes[0];
                     matrizUsuarios[indice][1] = partes[1];
+                    matrizUsuarios[indice][2] = partes[2];
+                    matrizUsuarios[indice][3] = partes[3];
+                    matrizUsuarios[indice][4] = partes[4];
+                    matrizUsuarios[indice][5] = partes[5];
+                    matrizUsuarios[indice][6] = partes[6];
                     indice++;
                 }
             }
@@ -71,36 +78,25 @@ public class RepositorioCatalogoJuegos {
         return lineas;
     }
 
-    public boolean usuarioExiste(String usuario) {
-        String[][] usuarios = obtenerTodosLosUsuarios();
-        for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i][0] != null && usuarios[i][0].equals(usuario)) {
+    public boolean juegoExiste(String codigo) {
+        String[][] juegos = obtenerTodosLosJuegos();
+        for (int i = 0; i < juegos.length; i++) {
+            if (juegos[i][0] != null && juegos[i][0].equals(codigo)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean validarCredenciales(String usuario, String contrasena) {
-        String[][] usuarios = obtenerTodosLosUsuarios();
-        for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i][0] != null && usuarios[i][0].equals(usuario) && 
-                usuarios[i][1].equals(contrasena)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean registrarUsuario(String usuario, String contrasena) {
-        if (usuarioExiste(usuario)) {
+    public boolean registrarJuego(String codigo, String nombre, String genero, String precio, String plataforma, String stock, String descripcion) {
+        if (juegoExiste(codigo)) {
             return false;
         }
         boolean esRegistrado = false;
         PrintWriter escritor = null;
         try {
             escritor = new PrintWriter(new FileWriter(nombreArchivo, true));
-            escritor.println(usuario + "," + contrasena);
+            escritor.println(codigo + "," + nombre + "," + genero + "," + precio + "," + plataforma + "," + stock + "," + descripcion);
             esRegistrado = true;
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo: " + e.getMessage());
