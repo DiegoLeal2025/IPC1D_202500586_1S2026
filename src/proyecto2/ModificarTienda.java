@@ -51,8 +51,36 @@ public class ModificarTienda extends JDialog{
         tarjeta.add(Precio);
         tarjeta.add(Genero);
         
+        btn3.addActionListener(l -> {
+        String Nombre=Llamar[1];
+        String precio=Llamar[3];
+        String Cantidad=Llamar[5];
+            
+        double acumulado=0.0;
+        int Cant = 0;
+        try{
+            acumulado = Double.parseDouble(precio);
+            Cant = Integer.parseInt(Cantidad);
+        }catch(Exception e){
+            System.out.println("No se pudo ver el precio");
+        }
+        ventana.Lista1.insertar(Nombre, acumulado, Cant);
+        ventana.Lista1.RehacerTabla(ventana.modeloCarrito);
+        });
+        
+        tarjeta.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                new MostrarDatos(ventana, Llamar);
+            }
+        });
         
         tarjeta.add(btn3);
         return tarjeta;
+    }
+    
+    public void AgregarCarro(String nombre, String Precio, String Cantidad)
+    {
+        
     }
 }

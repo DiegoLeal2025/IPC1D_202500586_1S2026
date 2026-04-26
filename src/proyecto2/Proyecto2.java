@@ -8,6 +8,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author elven
@@ -19,23 +20,36 @@ public class Proyecto2 extends JFrame {
     public JPanel pestaña2 = new JPanel(new GridLayout (1,2)); //Venta de videojuegos
     public JPanel Catalogo = new JPanel(new GridLayout (0,3,10,10)); //subdivision
     public JPanel pestaña3 = new JPanel(new BorderLayout());
-    public JPanel Carrito = new JPanel(); //subdivision
+    public JPanel Carrito = new JPanel(new GridLayout(3,1)); //subdivision
     public JPanel Tarjetas = new JPanel(); //tarjetas del catalogo
     public JPanel Buscar = new JPanel(); //borde superior
-    public JPanel JuntarF = new JPanel(new BorderLayout()); 
+    public JPanel JuntarF = new JPanel(new BorderLayout()); //unir botones para buscar y el scroll
     
     JScrollPane Scroll1 = new JScrollPane(Catalogo);
+    
+    String[]columnaCarrito = {"Nombre","Precio","Cantidad disponible"};
+    public DefaultTableModel modeloCarrito = new DefaultTableModel(columnaCarrito,0);
+    public JTable TablaCarrito = new JTable(modeloCarrito);
+    JScrollPane JSCarrito = new JScrollPane(TablaCarrito);
+    
+    String[]columnaHistorial = {"Codigo","Juego","Precio"};
+    public DefaultTableModel modeloHistorial = new DefaultTableModel(columnaHistorial,0);
+    public JTable TablaHistorial = new JTable(modeloHistorial);
+    JScrollPane JSHistorial = new JScrollPane(TablaHistorial);
+    
     JButton btn1 = new JButton("Tienda de VideoJuegos");
     JButton btn2 = new JButton("Regresar al menu");
-    JButton btn3 = new JButton("Ver Carrito");
-    JButton btn4 = new JButton("Volver a la tienda");
-    
+    JButton btn3 = new JButton("Agregar al Carrito");
+    JButton btn4 = new JButton("Pagar");
+     
     public JComboBox<String> Generos = new JComboBox<>(new String[]{"Todos","Accion","RPG","Estrategia","Deportes","Terror","Aventura"});
     public JComboBox<String> Plataforma = new JComboBox<>(new String[]{"Todas","PC","Playstation","Xbox","Nintendo Switch"});
     
     public JTextField Nombres = new JTextField(15);
     
     RepositorioCatalogoJuegos Juegos = new RepositorioCatalogoJuegos();
+    public listaCarrito Lista1 = new listaCarrito();
+    
     public String[][] matrizBuscar = Juegos.obtenerTodosLosJuegos();
     private ModificarTienda modificador;
     
@@ -59,39 +73,31 @@ public class Proyecto2 extends JFrame {
         Buscar.add(Nombres);
         JuntarF.add(Buscar, BorderLayout.NORTH);
         JuntarF.add(Scroll1, BorderLayout.CENTER);
-        JuntarF.add(btn3, BorderLayout.SOUTH);
+        //JuntarF.add(btn3, BorderLayout.SOUTH);
                
         for(int i=0; i<matrizJuegos.length; i++){
             String[] Datos=matrizJuegos[i];
-            System.out.println("¿La matriz es nula? " + (matrizJuegos == null));
             Tarjetas = modificador.TarjetaVisual(Datos);
             Catalogo.add(Tarjetas);
         }     
   
         pestaña1.add(btn1);
+        Carrito.add(JSHistorial);
+        Carrito.add(JSCarrito);
         pestaña2.add(JuntarF);
         pestaña2.add(Carrito);  
-        Carrito.add(btn2);
-        pestaña3.add(btn4);
+        Carrito.add(btn4);
+        //Carrito.add(btn2);
         
         mainPanel.add(pestaña1,"pestaña1");
         mainPanel.add(pestaña2,"pestaña2");
-        mainPanel.add(pestaña3,"carrito");
-        
+                
         btn1.addActionListener((e)->{
             Interfaz.show(mainPanel,"pestaña2");
         });
         
         btn2.addActionListener((e)->{
             Interfaz.show(mainPanel,"pestaña1");
-        });
-        
-        btn3.addActionListener((e)->{
-            Interfaz.show(mainPanel,"carrito");
-        });
-        
-        btn4.addActionListener((e)->{
-            Interfaz.show(mainPanel,"pestaña2");
         });
         
         Generos.addActionListener((e)->modificador.filtrar());
