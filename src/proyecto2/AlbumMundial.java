@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyecto2;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -30,6 +29,21 @@ public class AlbumMundial {
         this.Catalogo = gestor.cargarCartas();
         this.registrosUsuario = gestor.cargarCartasUsuario();
         this.totalRegistros = registrosUsuario.length;
+        
+        this.registrosUsuario = gestor.cargarCartasUsuario();
+
+        if (this.registrosUsuario != null) {
+        for (CartaUsuario reg : registrosUsuario) {
+            
+            if (reg == null) continue; 
+            
+            Carta cartaEncontrada = buscarCarta(reg.getCodigoCarta());
+            
+            if (cartaEncontrada != null) {
+                mallas[reg.getPagina()].pegarCarta(reg.getFila(), reg.getColumna(), cartaEncontrada);
+            }
+        }
+    }
         
         this.generador = new GeneradorCartas(Catalogo);
         
@@ -98,6 +112,116 @@ private JPanel crearEspacioVacio() {
     // Podrías poner un JLabel con "?" en el centro
     empty.add(new JLabel("?"));
     return empty;
+}
+
+public boolean agregarCartaEnPrimerVacio(int numPagina, Carta nueva) {
+    MallaOrtogonal malla = mallas[numPagina];
+    
+    // Recorremos filas y columnas
+    for (int f = 0; f < 4; f++) {
+        for (int c = 0; c < 6; c++) {
+            if (malla.ObtenerCarta(f, c) == null) {
+                malla.pegarCarta(f, c, nueva);
+                return true; // Éxito
+            }
+        }
+    }
+    return false; 
+}
+
+public void intercambiarCartas(int pag, int f1, int c1, int f2, int c2) {
+    MallaOrtogonal malla = mallas[pag];
+    
+    NodoMatriz nodo1 = malla.getNodo(f1, c1);
+    NodoMatriz nodo2 = malla.getNodo(f2, c2);
+    
+    if (nodo1 != null && nodo2 != null) {
+        Carta temp = nodo1.dato;
+        nodo1.dato = nodo2.dato;
+        nodo2.dato = temp;
+    }
+}
+
+public void mostrarPaginaConBusqueda(JPanel panel, int numPag, String criterio) {
+    panel.removeAll();
+    MallaOrtogonal mallaActual = mallas[numPag];
+    String filtro = criterio.toLowerCase();
+
+    for (int f = 0; f < 4; f++) {
+        for (int c = 0; c < 6; c++) {
+            Carta carta = mallaActual.ObtenerCarta(f, c);
+            if (carta != null) {
+                JPanel tarjeta = crearTarjetaCarta(carta);
+                
+                // Si la carta coincide con la búsqueda, resaltamos el borde
+                if (!filtro.isEmpty() && (
+                    carta.getNombre().toLowerCase().contains(filtro) ||
+                    carta.getTipo().toLowerCase().contains(filtro) ||
+                    carta.getRareza().toLowerCase().contains(filtro))) {
+                    
+                    tarjeta.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+                }
+                panel.add(tarjeta);
+            } else {
+                panel.add(crearEspacioVacio());
+            }
+        }
+    }
+    panel.revalidate();
+    panel.repaint();
+}
+
+    public Carta buscarCarta(String id) {
+        if (id == null || Catalogo == null)
+        {
+            return null;         
+        }
+                
+        for (int i = 0; i < Catalogo.length; i++) {
+            Carta c = Catalogo[i];
+            if (c != null) {
+                // Imprimimos solo la primera carta para comparar cómo se ve
+                if (i == 0) {
+                }
+                
+                if (c.getCodigo().trim().equalsIgnoreCase(id.trim())) {
+                    System.out.println("¡ÉXITO! Carta encontrada.");
+                    return c;
+                }
+            }
+        } 
+        return null;
+    }
+    
+    public void guardarProgreso(String nombreUsuario) {
+    // 1. Contar cuántas cartas hay pegadas en total para el tamaño del arreglo
+    int contador = 0;
+    for (MallaOrtogonal malla : mallas) {
+        for (int f = 0; f < 4; f++) {
+            for (int c = 0; c < 6; c++) {
+                if (malla.ObtenerCarta(f, c) != null) contador++;
+            }
+        }
+    }
+
+    // 2. Crear el arreglo de registros
+    CartaUsuario[] registros = new CartaUsuario[contador];
+    int i = 0;
+
+    // 3. Llenar el arreglo recorriendo las mallas
+    for (int p = 0; p < mallas.length; p++) {
+        for (int f = 0; f < 4; f++) {
+            for (int c = 0; c < 6; c++) {
+                Carta carta = mallas[p].ObtenerCarta(f, c);
+                if (carta != null) {
+                    registros[i++] = new CartaUsuario(nombreUsuario, carta.getCodigo(), p, f, c);
+                }
+            }
+        }
+    }
+
+    // 4. Llamar al gestor para que lo escriba en el disco duro
+    gestor.guardarCartasUsuario(registros, contador);
 }
 }
 

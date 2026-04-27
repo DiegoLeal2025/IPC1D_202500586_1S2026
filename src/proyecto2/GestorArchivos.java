@@ -51,6 +51,7 @@ public class GestorArchivos {
             if (l.isEmpty() || l.startsWith("#")) continue;
             
             String[] p = l.split("\\|"); 
+            
             if (p.length >= 5) {
                 reg[idx++] = new CartaUsuario(
                     p[0].trim(), // Nombre de usuario
@@ -72,19 +73,17 @@ public class GestorArchivos {
 
     public void guardarCartasUsuario(CartaUsuario[] registros, int usados) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(RUTA_USUARIO))) {
-            bw.write("usuario|no_carta|cantidad|pegada|pagina|fila|columna");
-            bw.newLine();
-            for (int i = 0; i < usados; i++) {
-                if (registros[i] != null) {
-                    bw.write(registros[i].toLinea());
-                    bw.newLine();
-                }
+        // Guardamos solo los datos reales, sin encabezados confusos
+        for (int i = 0; i < usados; i++) {
+            if (registros[i] != null) {
+                bw.write(registros[i].toLinea());
+                bw.newLine();
             }
-            System.out.println("album_usuario.txt guardado ("
-                    + usados + " registros).");
-        } catch (IOException e) {
-            System.out.println("No se pudo guardar: " + e.getMessage());
         }
+        bw.flush();
+    } catch (IOException e) {
+        System.out.println("Error al guardar: " + e.getMessage());
+    }
     }
     
     

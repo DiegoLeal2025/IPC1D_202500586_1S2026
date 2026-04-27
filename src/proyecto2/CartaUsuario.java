@@ -63,7 +63,7 @@ public class CartaUsuario {
     }
 
     public String toLinea() {
-        return usuario + "|" + codigoCarta + "|" + pagina + "|" + fila + "|" + columna;
+        return usuario + "|" + codigoCarta + "|" + cantidad + "|" + pegada + "|" + pagina + "|" + fila + "|" + columna;
     }
 
     @Override
