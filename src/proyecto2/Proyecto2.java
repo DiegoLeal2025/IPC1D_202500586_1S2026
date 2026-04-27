@@ -24,6 +24,7 @@ public class Proyecto2 extends JFrame {
     public JPanel Tarjetas = new JPanel(); //tarjetas del catalogo
     public JPanel Buscar = new JPanel(); //borde superior
     public JPanel JuntarF = new JPanel(new BorderLayout()); //unir botones para buscar y el scroll
+    public JPanel Album = new JPanel(new GridLayout(4,6,10,10));
     
     JScrollPane Scroll1 = new JScrollPane(Catalogo);
     
@@ -41,6 +42,7 @@ public class Proyecto2 extends JFrame {
     JButton btn2 = new JButton("Regresar al menu");
     JButton btn3 = new JButton("Agregar al Carrito");
     JButton btn4 = new JButton("Pagar");
+    JButton btn5 = new JButton("Ir a album");
      
     public JComboBox<String> Generos = new JComboBox<>(new String[]{"Todos","Accion","RPG","Estrategia","Deportes","Terror","Aventura"});
     public JComboBox<String> Plataforma = new JComboBox<>(new String[]{"Todas","PC","Playstation","Xbox","Nintendo Switch"});
@@ -53,6 +55,11 @@ public class Proyecto2 extends JFrame {
     public String[][] matrizBuscar = Juegos.obtenerTodosLosJuegos();
     private ModificarTienda modificador;
     
+    private AlbumMundial logica; 
+    private int paginaVisual = 0;
+    
+    public int paginaActual = 0;
+    
     Color Cpestaña1 = new Color(255,100,100);
     
     Proyecto2(){
@@ -60,6 +67,7 @@ public class Proyecto2 extends JFrame {
         pestaña2.setBackground(Color.CYAN);
         Catalogo.setBackground(Color.DARK_GRAY);
         Carrito.setBackground(Color.ORANGE);
+        Album.setBackground(Color.darkGray);
         Catalogo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         Scroll1.getVerticalScrollBar().setUnitIncrement(16);
@@ -67,21 +75,10 @@ public class Proyecto2 extends JFrame {
         
         modificador = new ModificarTienda(this);
         String[][] matrizJuegos = Juegos.obtenerTodosLosJuegos();
-        
-        Buscar.add(Generos);
-        Buscar.add(Plataforma);
-        Buscar.add(Nombres);
-        JuntarF.add(Buscar, BorderLayout.NORTH);
-        JuntarF.add(Scroll1, BorderLayout.CENTER);
-        //JuntarF.add(btn3, BorderLayout.SOUTH);
-               
-        for(int i=0; i<matrizJuegos.length; i++){
-            String[] Datos=matrizJuegos[i];
-            Tarjetas = modificador.TarjetaVisual(Datos);
-            Catalogo.add(Tarjetas);
-        }     
+        logica = new AlbumMundial();
   
         pestaña1.add(btn1);
+        pestaña1.add(btn5);
         Carrito.add(JSHistorial);
         Carrito.add(JSCarrito);
         pestaña2.add(JuntarF);
@@ -91,6 +88,7 @@ public class Proyecto2 extends JFrame {
         
         mainPanel.add(pestaña1,"pestaña1");
         mainPanel.add(pestaña2,"pestaña2");
+        mainPanel.add(Album,"Album");
                 
         btn1.addActionListener((e)->{
             Interfaz.show(mainPanel,"pestaña2");
@@ -102,6 +100,14 @@ public class Proyecto2 extends JFrame {
         
         btn4.addActionListener((e)->{
             modificador.Pagar();
+        });
+        
+        btn5.addActionListener((e)->{
+            Interfaz.show(mainPanel,"Album");
+            if (paginaActual < 4) { // Suponiendo 5 páginas (0 a 4)
+            paginaActual++;
+            logica.mostrarPaginaEnPanel(Album, paginaActual);
+    }
         });
         
         Generos.addActionListener((e)->modificador.filtrar());
@@ -123,4 +129,6 @@ public class Proyecto2 extends JFrame {
     public static void main(String[] args) {       
         new Proyecto2();
     }
+    
+   
 }
