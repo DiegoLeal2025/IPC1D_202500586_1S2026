@@ -5,6 +5,8 @@
 package proyecto2;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JDialog;
 import javax.swing.*;
 
@@ -14,7 +16,8 @@ import javax.swing.*;
  */
 public class ModificarTienda extends JDialog{
     private Proyecto2 ventana;
-    
+    RepositorioHistorial repoHistorial = new RepositorioHistorial();
+   
     public ModificarTienda(Proyecto2 ventana){
         this.ventana = ventana;
     }
@@ -79,8 +82,59 @@ public class ModificarTienda extends JDialog{
         return tarjeta;
     }
     
-    public void AgregarCarro(String nombre, String Precio, String Cantidad)
+    public void Pagar()
     {
+        Nodo actual = ventana.Lista1.getCabeza();
+        String ArticulosVacios="";
+        int Cant = 0;
+        double total=0.0;
         
+        
+        if(actual==null){
+            JOptionPane.showMessageDialog(ventana, "El carrito esta vacio");
+            return;
+        }
+        
+        while(actual!=null)
+        {
+            boolean compraExistosa=false;
+            for (int i = 0; i < ventana.matrizBuscar.length; i++) {
+                if (ventana.matrizBuscar[i][1].equals(actual.Nombre)) {
+                    int stockDisponible = Integer.parseInt(ventana.matrizBuscar[i][5]);
+                    if (stockDisponible > 0) {
+                        ventana.matrizBuscar[i][5] = String.valueOf(stockDisponible - 1);
+                        total += actual.Precio;
+                        Cant++;
+                        compraExistosa = true;
+                    }
+                    break; 
+                }
+            }
+            if (!compraExistosa) {
+                ArticulosVacios +=actual.Nombre + "\n";
+            }
+            actual = actual.siguiente;
+        }
+        
+        if (Cant > 0) {
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String timestamp = formato.format(LocalDateTime.now());
+            String Historialtotal = String.format("%.2f", total);
+            String HistorialCant = Cant + " juegos";
+            repoHistorial.registrarVenta(timestamp, HistorialCant, Historialtotal);
+            ventana.modeloHistorial.addRow(new Object[]{timestamp,"cantidad Juegos: "+ Cant, total});
+            
+        }
+        
+        if (!ArticulosVacios.isEmpty()) {
+            JOptionPane.showMessageDialog(ventana, "Ya no hay unidade");
+        } else {
+            JOptionPane.showMessageDialog(ventana, "Se ha realizado su compra");
+        }
+        ventana.Lista1.vaciar();
+        ventana.Lista1.RehacerTabla(ventana.modeloCarrito);
+        filtrar();
+        ventana.Catalogo.revalidate();
+        ventana.Catalogo.repaint();
     }
 }

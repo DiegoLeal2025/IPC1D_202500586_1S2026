@@ -12,10 +12,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class listaCarrito {
     private Nodo cabeza;
+
+    public void setCabeza(Nodo cabeza) {
+        this.cabeza = cabeza;
+    }
+
+    public Nodo getCabeza() {
+        return cabeza;
+    }
     
     public listaCarrito(){
         this.cabeza = null;
     }
+    
     
     public void insertar(String nombre, double precio, int cantidad){
         Nodo nuevoNodo = new Nodo(nombre,precio,cantidad);
@@ -53,4 +62,8 @@ public class listaCarrito {
         }
         return total;
     }
+    
+    public void vaciar() {
+        this.cabeza = null;
+    }   
 }

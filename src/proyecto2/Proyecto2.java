@@ -100,6 +100,10 @@ public class Proyecto2 extends JFrame {
             Interfaz.show(mainPanel,"pestaña1");
         });
         
+        btn4.addActionListener((e)->{
+            modificador.Pagar();
+        });
+        
         Generos.addActionListener((e)->modificador.filtrar());
         Plataforma.addActionListener((e)->modificador.filtrar());
         
